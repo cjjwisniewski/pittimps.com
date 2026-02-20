@@ -39,11 +39,9 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            # az storage blob sync is the exact command used for mirroring a local directory
-            # with an Azure container (similar to upload-batch, but with the ability to delete destinations)
-            az storage blob sync \
-              --container '$web' \
+            az storage blob upload-batch \
+              --destination '$web' \
               --account-name pittimpscom \
               --source ./dist \
               --auth-mode login \
-              --delete-destination true
+              --overwrite
