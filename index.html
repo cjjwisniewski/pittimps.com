@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pitt Imps | Pittsburgh Premodern MTG</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Background Elements for Premium Feel -->
+    <div class="bg-glow"></div>
+    <div class="bg-glow bg-glow-secondary"></div>
+
+    <header class="site-header">
+        <div class="container nav-container">
+            <a href="/" class="brand">
+                <img src="/logo.png" alt="Pitt Imps Logo" class="brand-logo"
+                    onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 40 40\'><circle cx=\'20\' cy=\'20\' r=\'20\' fill=\'%23FFB81C\'/></svg>'">
+                <span class="brand-text">PITT IMPS</span>
+            </a>
+            <nav class="main-nav">
+                <a href="#about" class="nav-link">About</a>
+                <a href="#events" class="nav-link">Events</a>
+                <a href="https://discord.gg/UmKWGpaXjZ" class="nav-btn" target="_blank" rel="noopener noreferrer">Join
+                    Us</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-content text-center">
+                <img src="/logo.png" alt="Pitt Imps Large Logo"
+                    style="max-height: 450px; width: auto; max-width: 100%; margin: 0 auto 2rem auto; filter: drop-shadow(0 0 30px rgba(255,184,28,0.4)); display: block;">
+                <h1 class="hero-title"><span class="text-gradient">Pitt Imps</span><br> Pittsburgh <span
+                        class="text-gradient">Premodern</span></h1>
+                <p class="hero-subtitle" style="margin-left: auto; margin-right: auto;">Classic Magic for the Modern
+                    Yinzer.</p>
+                <div class="hero-actions" style="justify-content: center;">
+                    <a href="#events" class="btn btn-primary">Upcoming Events</a>
+                    <a href="#about" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <div class="container section-container">
+                <div class="section-text">
+                    <h2 class="section-title">The Group</h2>
+                    <p>The Pitt Imps are a Pittsburgh-based Premodern format Magic: the Gathering crew. We have an
+                        organized monthly meetup, ad-hoc events, and an active Discord server!</p>
+                    <p>Originally known as "The Lords of the Pitt", we caught a ton of flack for that one online due to
+                        similarly named Chicago based-crew, and now we're here. Impish. Efficient. Ready to spend BB
+                        each turn. Lord of the Pit hasn't been registered in an Old School tournament in like 10 years,
+                        but who's keeping track?</p>
+                </div>
+                <div class="section-visual">
+                    <div class="mtg-card"
+                        style="background-image: url('/pit_imp.jpg'); background-size: cover; background-position: center;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="events" class="events-section">
+            <div class="container section-container">
+                <h2 class="section-title text-center">Upcoming Events</h2>
+                <div class="events-grid" id="events-grid">
+                    <!-- Dynamic events will be loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <span class="brand-text">PITT IMPS</span>
+                <p>Pittsburgh's Premodern MTG Community</p>
+            </div>
+            <div class="footer-links">
+                <a href="#about">About</a>
+                <a href="#events">Events</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Pitt Imps. All rights reserved.</p>
+        </div>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
