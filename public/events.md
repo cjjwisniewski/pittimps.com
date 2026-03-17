@@ -1,18 +1,18 @@
 ## Premodern Tournament
-- **Date**: MAR 7
+- **Date**: APR 11
 - **Location**: The Vault
 
 ## Monthly Meetup
-- **Date**: MAR 15
-- **Location**: Guy on the Couch
-
-## Monthly Meetup
-- **Date**: APR 19
+- **Date**: APR 25
 - **Location**: Guy on the Couch
 
 ## Monthly Meetup
 - **Date**: MAY 17
 - **Location**: Guy on the Couch
+
+## Premodern Tournament
+- **Date**: May 23
+- **Location**: The Vault
 
 ## Monthly Meetup
 - **Date**: JUN 21
