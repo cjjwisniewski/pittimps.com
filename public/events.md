@@ -1,6 +1,10 @@
 ## Premodern Tournament
-- **Date**: APR 11
+- **Date**: APR 05
 - **Location**: The Vault
+
+## Team Trios (Legacy/Vintage/Premodern)
+- **Date**: APR 11
+- **Location**: Taitan Game Shop
 
 ## Monthly Meetup
 - **Date**: APR 25
