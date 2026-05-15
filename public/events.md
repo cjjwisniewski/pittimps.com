@@ -18,6 +18,10 @@
 - **Date**: SEPT 12
 - **Location**: The Warp Gate
 
+## Excalibur Events Premodern 25k
+- **Date**: SEPT 26-27
+- **Location**: Niagara Falls Convention Center
+
 ## Eternal Weekend
 - **Date**: OCT 29-NOV 1
 - **Location**: David L. Lawrence Convention Center
