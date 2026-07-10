@@ -1,26 +1,26 @@
+## Excalibur Events Weekend
+- **Date**: JUL 10-12
+- **Location**: David L. Lawrence Convention Center
+
 ## Monthly Meetup
-- **Date**: MAY 30
+- **Date**: JUL 18
 - **Location**: Guy on the Couch
 
 ## Premodern Tournament
-- **Date**: May 23
+- **Date**: JUL 25
 - **Location**: The Vault
 
-## Monthly Meetup
-- **Date**: JUN 21
-- **Location**: Guy on the Couch
-
-## Excalibur Events Weekend
-- **Date**: JULY 10-12
-- **Location**: David L. Lawrence Convention Center
+## Premodern Tournament
+- **Date**: SEPT 5
+- **Location**: The Vault
 
 ## Buckeye Brawl
 - **Date**: SEPT 12
 - **Location**: The Warp Gate
 
 ## Excalibur Events Premodern 25k
-- **Date**: SEPT 26-27
-- **Location**: Niagara Falls Convention Center
+- **Date**: SEPT 26
+- **Location**: The Vault
 
 ## Eternal Weekend
 - **Date**: OCT 29-NOV 1
