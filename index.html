@@ -41,7 +41,13 @@
         <section class="hero-section">
             <div class="container">
                 <div class="glass-panel hero-card">
-                    <img src="/pitt-imps-emblem.jpg" alt="Pitt Imps Emblem" class="hero-logo" />
+                    <span class="corner corner-tl" aria-hidden="true"></span>
+                    <span class="corner corner-tr" aria-hidden="true"></span>
+                    <span class="corner corner-bl" aria-hidden="true"></span>
+                    <span class="corner corner-br" aria-hidden="true"></span>
+                    <div class="hero-emblem-wrap">
+                        <img src="/pitt-imps-emblem.jpg" alt="Pitt Imps Emblem" class="hero-logo" />
+                    </div>
                     <div class="hero-copy">
                         <span class="eyebrow">Pittsburgh Premodern MTG</span>
                         <h1>Pitt Imps</h1>
@@ -50,6 +56,45 @@
                     <div class="hero-actions">
                         <a href="#events" class="btn btn-primary">Upcoming Events</a>
                         <a href="#about" class="btn btn-secondary">About the Crew</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section aria-label="Community Highlights">
+            <div class="container">
+                <div class="pillars-grid">
+                    <div class="glass-panel interactive pillar-card">
+                        <div class="pillar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" />
+                                <path d="M16 2v4M8 2v4M3 10h18" />
+                            </svg>
+                        </div>
+                        <h3>Monthly Meetups</h3>
+                        <p>Regular Pittsburgh Premodern tournaments and casual gatherings at local shops and venues.</p>
+                    </div>
+                    <div class="glass-panel interactive pillar-card">
+                        <div class="pillar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="6" y="3" width="12" height="18" rx="2" />
+                                <path d="M10 8h4M10 12h4M10 16h2" />
+                            </svg>
+                        </div>
+                        <h3>1995&ndash;2003 Card Pool</h3>
+                        <p>Old-frame Magic at its best—from Fourth Edition through Scourge, proxy-friendly for testing.</p>
+                    </div>
+                    <div class="glass-panel interactive pillar-card">
+                        <div class="pillar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                            </svg>
+                        </div>
+                        <h3>Active Discord</h3>
+                        <p>Deck tech, card lending, ad-hoc spell-slinging, and travel coordination for regional events.</p>
                     </div>
                 </div>
             </div>
@@ -87,6 +132,7 @@
                     <div class="about-visual">
                         <div class="mtg-card" role="img" aria-label="Pit Imp Magic: the Gathering card"
                             style="background-image: url('/pit_imp.jpg');"></div>
+                        <span class="card-caption">Pit Imp &middot; Tempest (1997) &middot; Illus. Phil Foglio</span>
                     </div>
                 </div>
             </div>
@@ -94,9 +140,13 @@
 
         <section id="events">
             <div class="container">
-                <div class="section-header">
-                    <span class="eyebrow">Schedule</span>
-                    <h2>Upcoming Events</h2>
+                <div class="section-header-row">
+                    <div class="section-header">
+                        <span class="eyebrow">Schedule</span>
+                        <h2>Upcoming Events</h2>
+                    </div>
+                    <a href="https://discord.gg/UmKWGpaXjZ" class="section-cta" target="_blank"
+                        rel="noopener noreferrer">Coordinate on Discord &rarr;</a>
                 </div>
                 <div class="events-grid" id="events-grid">
                     <!-- Dynamic events loaded from /events.md -->

@@ -18,6 +18,14 @@ if (card && !prefersReducedMotion && supportsHover) {
     card.style.transform = `perspective(1000px) rotateY(${x}deg) rotateX(${y}deg)`;
   });
 
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const mx = ((e.clientX - rect.left) / rect.width) * 100;
+    const my = ((e.clientY - rect.top) / rect.height) * 100;
+    card.style.setProperty('--mx', `${mx}%`);
+    card.style.setProperty('--my', `${my}%`);
+  });
+
   document.addEventListener('mouseleave', () => {
     card.style.transform = 'perspective(1000px) rotateY(-10deg) rotateX(4deg)';
   });
@@ -52,9 +60,11 @@ function createPinIcon(): SVGSVGElement {
   return svg;
 }
 
-function renderEventCard(event: ParsedEvent): HTMLElement {
+function renderEventCard(event: ParsedEvent, isNext: boolean): HTMLElement {
   const cardEl = document.createElement('article');
-  cardEl.className = 'glass-panel interactive event-card';
+  cardEl.className = isNext
+    ? 'glass-panel interactive event-card is-next'
+    : 'glass-panel interactive event-card';
 
   const dateEl = document.createElement('div');
   dateEl.className = 'event-date';
@@ -72,14 +82,25 @@ function renderEventCard(event: ParsedEvent): HTMLElement {
   const infoEl = document.createElement('div');
   infoEl.className = 'event-info';
 
+  const titleRowEl = document.createElement('div');
+  titleRowEl.className = 'event-title-row';
+
   const titleEl = document.createElement('h3');
   titleEl.textContent = event.title;
+  titleRowEl.appendChild(titleEl);
+
+  if (isNext) {
+    const badgeEl = document.createElement('span');
+    badgeEl.className = 'next-pill';
+    badgeEl.textContent = 'Next Up';
+    titleRowEl.appendChild(badgeEl);
+  }
 
   const locEl = document.createElement('span');
   locEl.className = 'event-location';
   locEl.append(createPinIcon(), document.createTextNode(event.location));
 
-  infoEl.append(titleEl, locEl);
+  infoEl.append(titleRowEl, locEl);
   cardEl.append(dateEl, infoEl);
   return cardEl;
 }
@@ -172,7 +193,9 @@ async function loadEvents(): Promise<void> {
       return;
     }
 
-    eventsGrid.replaceChildren(...eventsToDisplay.map(renderEventCard));
+    eventsGrid.replaceChildren(
+      ...eventsToDisplay.map((event, index) => renderEventCard(event, index === 0))
+    );
   } catch (error) {
     console.error('Error loading events:', error);
     renderEmptyEvents(eventsGrid);
