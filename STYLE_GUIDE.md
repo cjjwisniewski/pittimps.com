@@ -53,8 +53,8 @@ This document defines the visual, structural, and code conventions for **pittimp
 * **Vertical Rhythm:** `gap: 3rem` between major sections (`2rem` on mobile).
 * **Border Radius:** `var(--border-radius)` (`8px`) for `.glass-panel`, `.highlight-box`, `.btn`, and `.nav-cta`; `12px` for the MTG card frame; `999px` for circular logo emblems.
 * **Breakpoints:**
-  * `max-width: 768px` — Collapses two-column `.about-panel` to single column and resets `.mtg-card` 3D tilt.
-  * `max-width: 640px` — Mobile padding adjustments, tighter navbar spacing, stacked full-width hero CTAs.
+  * `max-width: 768px` - Collapses two-column `.about-panel` to single column and resets `.mtg-card` 3D tilt.
+  * `max-width: 640px` - Mobile padding adjustments, tighter navbar spacing, stacked full-width hero CTAs.
 * **Hover & Motion Guards:**
   * Wrap hover lift/scale transforms in `@media (hover: hover)` so touch devices do not get stuck in hover states.
   * Respect `@media (prefers-reduced-motion: reduce)` by disabling smooth-scroll and 3D card tilt transforms.
@@ -69,8 +69,8 @@ This document defines the visual, structural, and code conventions for **pittimp
   * **Primary (`.btn-primary`):** `background: var(--accent-color)`, `color: var(--c-slate-950)`, `font-weight: 600`.
   * **Secondary (`.btn-secondary`):** `background: var(--bg-surface)`, `border: 1px solid var(--border-color)`, `color: var(--text-primary)`, hover `border-color: var(--accent-color)`.
 * **Brand Assets:**
-  * **Logo:** [`public/pitt-imps-emblem.jpg`](public/pitt-imps-emblem.jpg) — Square circular Pitt Imps emblem on a dark slate inner background, framed in CSS with `border-radius: 999px` and `1px solid var(--accent-border)`.
-  * **Favicon:** [`public/favicon.svg`](public/favicon.svg) — Scalable SVG Pit Imp silhouette on a `#0f172a` badge with `#ffb81c` ring, paired with `<link rel="alternate icon" type="image/jpeg" href="/pitt-imps-emblem.jpg" />`.
+  * **Logo:** [`public/pitt-imps-emblem.jpg`](public/pitt-imps-emblem.jpg) - Square circular Pitt Imps emblem on a dark slate inner background, framed in CSS with `border-radius: 999px` and `1px solid var(--accent-border)`.
+  * **Favicon:** [`public/favicon.svg`](public/favicon.svg) - Scalable SVG Pit Imp silhouette on a `#0f172a` badge with `#ffb81c` ring, paired with `<link rel="alternate icon" type="image/jpeg" href="/pitt-imps-emblem.jpg" />`.
 * **Icons:** Use inline SVGs (`fill="currentColor"` or `stroke="currentColor"`, `aria-hidden="true"`) rather than external icon libraries.
 
 ---

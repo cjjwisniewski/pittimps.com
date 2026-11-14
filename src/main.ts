@@ -157,7 +157,7 @@ function renderEmptyEvents(eventsGrid: HTMLElement): void {
   emptyEl.className = 'glass-panel events-empty';
   emptyEl.style.gridColumn = '1 / -1';
   const p = document.createElement('p');
-  p.textContent = 'No upcoming events scheduled right now — check Discord for ad-hoc meetups.';
+  p.textContent = 'No upcoming events scheduled right now - check Discord for ad-hoc meetups.';
   emptyEl.appendChild(p);
   eventsGrid.replaceChildren(emptyEl);
 }
