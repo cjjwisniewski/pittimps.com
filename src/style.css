@@ -428,48 +428,6 @@ button:focus-visible {
   margin-top: 0.25rem;
 }
 
-/* Pillars Grid (3-card community highlights) */
-.pillars-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
-}
-
-.pillar-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 1.5rem;
-}
-
-.pillar-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: var(--border-radius);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--accent-alpha);
-  border: 1px solid var(--accent-border);
-  color: var(--accent-color);
-}
-
-.pillar-icon svg {
-  width: 19px;
-  height: 19px;
-}
-
-.pillar-card h3 {
-  font-size: 1.05rem;
-  color: var(--text-primary);
-}
-
-.pillar-card p {
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
-}
-
 /* About Section */
 .about-panel {
   display: grid;
@@ -760,10 +718,6 @@ button:focus-visible {
 
 /* Responsive Breakpoints */
 @media (max-width: 768px) {
-  .pillars-grid {
-    grid-template-columns: 1fr;
-  }
-
   .about-panel {
     grid-template-columns: 1fr;
     gap: 2rem;
