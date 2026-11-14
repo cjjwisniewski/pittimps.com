@@ -6,6 +6,53 @@ if (yearEl) {
   yearEl.textContent = String(new Date().getFullYear());
 }
 
+// Discord temporary invite modal
+const discordModal = document.getElementById('discord-modal');
+const discordCloseBtn = document.getElementById('discord-modal-close');
+const discordCancelBtn = document.getElementById('discord-modal-cancel');
+const discordContinueLink = document.getElementById('discord-modal-continue');
+let lastFocusedTrigger: HTMLElement | null = null;
+
+function openDiscordModal(trigger: HTMLElement): void {
+  if (!discordModal) return;
+  lastFocusedTrigger = trigger;
+  discordModal.hidden = false;
+  document.body.style.overflow = 'hidden';
+  discordContinueLink?.focus();
+}
+
+function closeDiscordModal(): void {
+  if (!discordModal || discordModal.hidden) return;
+  discordModal.hidden = true;
+  document.body.style.overflow = '';
+  lastFocusedTrigger?.focus();
+  lastFocusedTrigger = null;
+}
+
+document.querySelectorAll<HTMLAnchorElement>('[data-discord-invite]').forEach((link) => {
+  link.addEventListener('click', (e) => {
+    if (!discordModal) return;
+    e.preventDefault();
+    openDiscordModal(link);
+  });
+});
+
+discordCloseBtn?.addEventListener('click', closeDiscordModal);
+discordCancelBtn?.addEventListener('click', closeDiscordModal);
+discordContinueLink?.addEventListener('click', closeDiscordModal);
+
+discordModal?.addEventListener('click', (e) => {
+  if (e.target === discordModal) {
+    closeDiscordModal();
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && discordModal && !discordModal.hidden) {
+    closeDiscordModal();
+  }
+});
+
 // Setup card 3D hover effect (hover devices only, respecting reduced motion)
 const card = document.querySelector('.mtg-card') as HTMLDivElement | null;
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
