@@ -6,7 +6,8 @@ This document defines the visual, structural, and code conventions for **pittimp
 
 ## 1. Visual Identity & Aesthetic
 
-* **Theme:** Dark-first, high-contrast slate aesthetic (`#020617` canvas with a subtle top radial gold glow) paired with translucent glassmorphism surfaces and a single vibrant Pittsburgh Gold accent (`#ffb81c`).
+* **Theme:** Dark-first, high-contrast slate aesthetic (`#020617` canvas with top gold / subtle crimson radial glows and a `160px x 80px` Pittsburgh tied-arch bridge lattice in `body::before`) paired with translucent glassmorphism surfaces and a single vibrant Pittsburgh Gold accent (`#ffb81c`).
+* **Stacking Context:** `body::before` sits at `z-index: 0`, while `main` and `.site-footer` sit at `z-index: 1` (leaving `.navbar` at `z-index: 100` and `#discord-modal` at `z-index: 200`).
 * **Tone:** Clean, restrained, modern. Avoid heavy multi-color gradients, neon clutter, or gratuitous animations.
 * **Tokens First:** Always reference the CSS custom properties defined in [`src/style.css`](src/style.css) rather than hardcoding hex or `rgba(...)` colors.
 
@@ -21,7 +22,7 @@ This document defines the visual, structural, and code conventions for **pittimp
 | `--bg-surface-hover` | `#1e293b` (`--c-slate-800`) | Hover state for solid surfaces |
 | `--text-primary` | `#f8fafc` (`--c-slate-50`) | Headings, primary labels, active nav links |
 | `--text-secondary` | `#cbd5e1` (`--c-slate-300`) | Body copy, descriptions, subtitles |
-| `--text-muted` | `#64748b` (`--c-slate-500`) | De-emphasized metadata, empty states, icons |
+| `--text-muted` | `#94a3b8` (`--c-slate-400`) | De-emphasized metadata, empty states, icons |
 | `--accent-color` | `#ffb81c` | Primary CTAs, eyebrows, active indicators, links |
 | `--accent-hover` | `#eab308` | Hover state for accent elements |
 | `--accent-alpha` | `rgba(255, 184, 28, 0.14)` | Translucent pill backgrounds (e.g., `.nav-cta`) |
@@ -54,7 +55,8 @@ This document defines the visual, structural, and code conventions for **pittimp
 * **Border Radius:** `var(--border-radius)` (`8px`) for `.glass-panel`, `.highlight-box`, `.btn`, and `.nav-cta`; `12px` for the MTG card frame; `999px` for circular logo emblems.
 * **Breakpoints:**
   * `max-width: 768px` - Collapses two-column `.about-panel` to single column and resets `.mtg-card` 3D tilt.
-  * `max-width: 640px` - Mobile padding adjustments, tighter navbar spacing, stacked full-width hero CTAs.
+  * `max-width: 640px` - Mobile padding adjustments, `44px` minimum touch targets on nav/footer/modal links, stacked full-width hero and modal CTAs.
+  * `max-width: 400px` - Compacts `.nav-cta` to icon-only and scales `.brand-text` so the navbar fits narrow screens without wrapping.
 * **Hover & Motion Guards:**
   * Wrap hover lift/scale transforms in `@media (hover: hover)` so touch devices do not get stuck in hover states.
   * Respect `@media (prefers-reduced-motion: reduce)` by disabling smooth-scroll and 3D card tilt transforms.
@@ -71,12 +73,16 @@ This document defines the visual, structural, and code conventions for **pittimp
 * **Brand Assets:**
   * **Logo:** [`public/pitt-imps-emblem.jpg`](public/pitt-imps-emblem.jpg) - Square circular Pitt Imps emblem on a dark slate inner background, framed in CSS with `border-radius: 999px` and `1px solid var(--accent-border)`.
   * **Favicon:** [`public/favicon.svg`](public/favicon.svg) - Scalable SVG Pit Imp silhouette on a `#0f172a` badge with `#ffb81c` ring, paired with `<link rel="alternate icon" type="image/jpeg" href="/pitt-imps-emblem.jpg" />`.
-* **Icons:** Use inline SVGs (`fill="currentColor"` or `stroke="currentColor"`, `aria-hidden="true"`) rather than external icon libraries.
+* **Hero & Event Motifs:**
+  * **Hero Card:** Uses `.corner` gold bracket accents and a soft radial gold halo behind `.hero-logo`.
+  * **Next Event:** Highlight the first upcoming event with `.event-card.is-next` (left gold stripe) and a `.next-pill` badge.
+  * **Discord Invite Modal:** All Discord invite links use `data-discord-invite` to open `#discord-modal`, informing visitors that the link is a temporary invite and they should introduce themselves for a permanent role.
 
 ---
 
 ## 6. Security & Markup Conventions
 
+* **Icons:** Use inline SVGs (`fill="currentColor"` or `stroke="currentColor"`, `aria-hidden="true"`) rather than external icon libraries.
 * **No `innerHTML` Injection:** Build dynamic DOM nodes (such as event cards from [`public/events.md`](public/events.md)) using `document.createElement`, `document.createElementNS`, and `textContent` in [`src/main.ts`](src/main.ts).
 * **External Links:** Always include `target="_blank" rel="noopener noreferrer"`.
 * **SEO & Head Metadata:** Keep `<meta name="theme-color" content="#020617" />`, `<meta name="description" ... />`, and Open Graph tags up to date in [`index.html`](index.html) and [`404.html`](404.html).
