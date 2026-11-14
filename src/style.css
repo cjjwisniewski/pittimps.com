@@ -662,6 +662,48 @@ button:focus-visible {
   color: var(--text-muted);
 }
 
+.event-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.event-action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 0.28rem 0.7rem;
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.event-action-link:hover {
+  color: var(--accent-color);
+  border-color: var(--accent-border);
+  background: var(--accent-alpha);
+}
+
+.event-action-link:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.event-action-link svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
 .events-empty {
   text-align: center;
   padding: 2rem;
@@ -840,6 +882,11 @@ button:focus-visible {
     min-height: 44px;
     display: inline-flex;
     align-items: center;
+  }
+
+  .event-action-link {
+    min-height: 44px;
+    padding: 0.4rem 0.85rem;
   }
 
   .page-content {

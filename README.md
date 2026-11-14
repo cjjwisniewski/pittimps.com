@@ -17,9 +17,11 @@ To add a new event to the website, open [`public/events.md`](public/events.md) a
 ## Premodern Tournament
 - **Date**: MAR 15
 - **Location**: The Vault
+- **Link**: https://example.com/event-details
+- **Map**: https://maps.google.com/?q=The+Vault
 ```
 
-You can also include a year (e.g., `MAR 19, 2027`). The parser automatically sorts events chronologically and hides past events once their date has passed.
+`Link` and `Map` are optional (`http://` or `https://` URLs); when provided, the event card renders `Event Info` and `Map` buttons. You can also include a year in the date (e.g., `MAR 19, 2027`). The parser automatically sorts events chronologically and hides past events once their date has passed.
 
 ## Design & Style Conventions
 See [STYLE_GUIDE.md](STYLE_GUIDE.md) for color tokens, typography, layout spacing, and component patterns.

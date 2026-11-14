@@ -84,9 +84,30 @@ interface ParsedEvent {
   month: string;
   day: string;
   dateObj: Date;
+  link?: string;
+  map?: string;
 }
 
-function createPinIcon(): SVGSVGElement {
+function sanitizeHttpUrl(raw: string): string | undefined {
+  const trimmed = raw.replace(/\*\*/g, '').trim();
+  const mdMatch = trimmed.match(/^\[[^\]]*\]\((https?:\/\/[^\s)]+)\)$/i);
+  const candidate = mdMatch ? mdMatch[1] : trimmed;
+
+  try {
+    const parsed = new URL(candidate);
+    if (parsed.protocol === 'https:' || parsed.protocol === 'http:') {
+      return parsed.toString();
+    }
+  } catch {
+    return undefined;
+  }
+
+  return undefined;
+}
+
+function createSvgIcon(
+  elements: Array<{ tag: 'path' | 'circle' | 'polyline' | 'line' | 'polygon'; attrs: Record<string, string> }>
+): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 24 24');
   svg.setAttribute('fill', 'none');
@@ -96,15 +117,50 @@ function createPinIcon(): SVGSVGElement {
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
 
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  path.setAttribute('d', 'M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z');
-  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-  circle.setAttribute('cx', '12');
-  circle.setAttribute('cy', '10');
-  circle.setAttribute('r', '3');
+  elements.forEach(({ tag, attrs }) => {
+    const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
+    svg.appendChild(el);
+  });
 
-  svg.append(path, circle);
   return svg;
+}
+
+function createPinIcon(): SVGSVGElement {
+  return createSvgIcon([
+    { tag: 'path', attrs: { d: 'M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z' } },
+    { tag: 'circle', attrs: { cx: '12', cy: '10', r: '3' } }
+  ]);
+}
+
+function createExternalLinkIcon(): SVGSVGElement {
+  return createSvgIcon([
+    { tag: 'path', attrs: { d: 'M15 3h6v6' } },
+    { tag: 'path', attrs: { d: 'M10 14 21 3' } },
+    { tag: 'path', attrs: { d: 'M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6' } }
+  ]);
+}
+
+function createMapIcon(): SVGSVGElement {
+  return createSvgIcon([
+    { tag: 'polygon', attrs: { points: '3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21' } },
+    { tag: 'line', attrs: { x1: '9', x2: '9', y1: '3', y2: '18' } },
+    { tag: 'line', attrs: { x1: '15', x2: '15', y1: '6', y2: '21' } }
+  ]);
+}
+
+function createEventActionLink(
+  href: string,
+  label: string,
+  icon: SVGSVGElement
+): HTMLAnchorElement {
+  const linkEl = document.createElement('a');
+  linkEl.className = 'event-action-link';
+  linkEl.href = href;
+  linkEl.target = '_blank';
+  linkEl.rel = 'noopener noreferrer';
+  linkEl.append(icon, document.createTextNode(label));
+  return linkEl;
 }
 
 function renderEventCard(event: ParsedEvent, isNext: boolean): HTMLElement {
@@ -148,6 +204,24 @@ function renderEventCard(event: ParsedEvent, isNext: boolean): HTMLElement {
   locEl.append(createPinIcon(), document.createTextNode(event.location));
 
   infoEl.append(titleRowEl, locEl);
+
+  if (event.link || event.map) {
+    const actionsEl = document.createElement('div');
+    actionsEl.className = 'event-actions';
+
+    if (event.link) {
+      actionsEl.appendChild(
+        createEventActionLink(event.link, 'Event Info', createExternalLinkIcon())
+      );
+    }
+
+    if (event.map) {
+      actionsEl.appendChild(createEventActionLink(event.map, 'Map', createMapIcon()));
+    }
+
+    infoEl.appendChild(actionsEl);
+  }
+
   cardEl.append(dateEl, infoEl);
   return cardEl;
 }
@@ -180,6 +254,8 @@ async function loadEvents(): Promise<void> {
       const title = lines[0].trim();
       let dateString = '';
       let location = 'TBA';
+      let link: string | undefined;
+      let map: string | undefined;
       let month = '???';
       let day = '??';
       let dateObj = new Date(0);
@@ -220,9 +296,19 @@ async function loadEvents(): Promise<void> {
           const rawLoc = line.split(/location/i)[1]?.replace(/^[\s:*]+/, '').trim() || '';
           location = rawLoc.replace(/\*\*/g, '').trim();
         }
+
+        const linkMatch = line.match(/^[-*]\s*\*{0,2}link\*{0,2}\s*:\s*(.+)$/i);
+        if (linkMatch) {
+          link = sanitizeHttpUrl(linkMatch[1]);
+        }
+
+        const mapMatch = line.match(/^[-*]\s*\*{0,2}map\*{0,2}\s*:\s*(.+)$/i);
+        if (mapMatch) {
+          map = sanitizeHttpUrl(mapMatch[1]);
+        }
       });
 
-      allEvents.push({ title, location, month, day, dateObj });
+      allEvents.push({ title, location, month, day, dateObj, link, map });
     });
 
     const today = new Date();
