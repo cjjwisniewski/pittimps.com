@@ -19,7 +19,7 @@
 
   --text-primary: var(--c-slate-50);
   --text-secondary: var(--c-slate-300);
-  --text-muted: var(--c-slate-500);
+  --text-muted: var(--c-slate-400);
 
   --accent-color: #ffb81c;
   --accent-hover: #eab308;
@@ -113,6 +113,13 @@ a {
 
 a:hover {
   color: var(--accent-hover);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 .eyebrow {
@@ -775,19 +782,31 @@ a:hover {
 
   .nav-container {
     padding: 0.75rem 1rem;
+    gap: 0.75rem;
   }
 
   .nav-links {
-    gap: 0.9rem;
+    gap: 0.75rem;
   }
 
   .nav-link {
     font-size: 0.875rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.25rem;
   }
 
   .nav-cta {
-    padding: 0.4rem 0.75rem;
+    min-height: 44px;
+    padding: 0.5rem 0.8rem;
     font-size: 0.82rem;
+  }
+
+  .footer-links a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
 
   .page-content {
@@ -819,6 +838,20 @@ a:hover {
 
   .footer-container {
     padding: 1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .brand-text {
+    font-size: 1rem;
+  }
+
+  .nav-cta span {
+    display: none;
+  }
+
+  .nav-cta {
+    padding: 0.5rem 0.7rem;
   }
 }
 
