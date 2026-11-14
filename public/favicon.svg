@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Outer dark slate badge with Pittsburgh Gold ring -->
+  <circle cx="32" cy="32" r="29" fill="#0f172a" stroke="#ffb81c" stroke-width="4" />
+  <!-- Stylized Pit Imp head silhouette (swept-back crest, brow, and jaw) -->
+  <path
+    d="M17 44 C15 36 18 28 24 23 C29 19 37 14 49 14 C44 20 42 25 43 30 C47 32 48 37 45 41 C41 47 33 50 25 49 C21 48 18 46 17 44 Z"
+    fill="#d3202a"
+    stroke="#ffb81c"
+    stroke-width="1.5"
+    stroke-linejoin="round"
+  />
+  <!-- Brow ridge & grinning teeth -->
+  <path
+    d="M23 35 L43 34 C42 39 38 42 32 42 C27 42 24 39 23 35 Z"
+    fill="#0f172a"
+  />
+  <path
+    d="M25 36 L28 39 L31 36 L34 39 L37 36 L40 39 L42 35.5"
+    fill="none"
+    stroke="#ffb81c"
+    stroke-width="1.75"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <!-- Glowing gold eyes -->
+  <ellipse cx="29" cy="29" rx="2.6" ry="1.8" transform="rotate(-12 29 29)" fill="#ffb81c" />
+  <ellipse cx="38" cy="27.5" rx="2.4" ry="1.7" transform="rotate(8 38 27.5)" fill="#ffb81c" />
+</svg>
