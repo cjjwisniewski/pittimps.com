@@ -7,7 +7,7 @@ The site is a fast, static web application built with **Vite**, **TypeScript**, 
 ## Features
 - **Dynamic Event Parsing**: The Upcoming Events section is populated from [`public/events.md`](public/events.md). [`src/main.ts`](src/main.ts) parses the Markdown, filters out past events, sorts chronologically, and renders up to 4 upcoming events using safe DOM construction.
 - **Modern Slate & Gold UI**: High-contrast dark slate (`#020617`) canvas with translucent glassmorphism panels, `Inter` typography, Pittsburgh Gold (`#ffb81c`) accents, and a responsive 3D Pit Imp card showcase.
-- **Custom Branding**: Features a cleaned-up circular Pitt Imps emblem ([`public/logo.jpg`](public/logo.jpg)) and a scalable SVG Pit Imp favicon ([`public/favicon.svg`](public/favicon.svg)).
+- **Custom Branding**: Features a cleaned-up circular Pitt Imps emblem ([`public/pitt-imps-emblem.jpg`](public/pitt-imps-emblem.jpg)) and a scalable SVG Pit Imp favicon ([`public/favicon.svg`](public/favicon.svg)).
 - **Performant & Static**: Built with Vite and deployed to Azure Storage (`$web`) via GitHub Actions.
 
 ## How to Use `events.md`

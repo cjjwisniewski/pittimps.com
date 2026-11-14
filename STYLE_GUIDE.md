@@ -69,8 +69,8 @@ This document defines the visual, structural, and code conventions for **pittimp
   * **Primary (`.btn-primary`):** `background: var(--accent-color)`, `color: var(--c-slate-950)`, `font-weight: 600`.
   * **Secondary (`.btn-secondary`):** `background: var(--bg-surface)`, `border: 1px solid var(--border-color)`, `color: var(--text-primary)`, hover `border-color: var(--accent-color)`.
 * **Brand Assets:**
-  * **Logo:** [`public/logo.jpg`](public/logo.jpg) — Square circular Pitt Imps emblem on a dark slate inner background, framed in CSS with `border-radius: 999px` and `1px solid var(--accent-border)`.
-  * **Favicon:** [`public/favicon.svg`](public/favicon.svg) — Scalable SVG Pit Imp silhouette on a `#0f172a` badge with `#ffb81c` ring, paired with `<link rel="alternate icon" type="image/jpeg" href="/logo.jpg" />`.
+  * **Logo:** [`public/pitt-imps-emblem.jpg`](public/pitt-imps-emblem.jpg) — Square circular Pitt Imps emblem on a dark slate inner background, framed in CSS with `border-radius: 999px` and `1px solid var(--accent-border)`.
+  * **Favicon:** [`public/favicon.svg`](public/favicon.svg) — Scalable SVG Pit Imp silhouette on a `#0f172a` badge with `#ffb81c` ring, paired with `<link rel="alternate icon" type="image/jpeg" href="/pitt-imps-emblem.jpg" />`.
 * **Icons:** Use inline SVGs (`fill="currentColor"` or `stroke="currentColor"`, `aria-hidden="true"`) rather than external icon libraries.
 
 ---
