@@ -38,7 +38,13 @@ npm install
 npm run dev
 ```
 
-3. Build for production:
+3. Typecheck and test (CI-only):
+```bash
+npm run check   # TypeScript typecheck (tsc --noEmit)
+npm run test    # Runs CI-only automated tests (requires GITHUB_ACTIONS=true)
+```
+
+4. Build for production:
 ```bash
 npm run build
 ```

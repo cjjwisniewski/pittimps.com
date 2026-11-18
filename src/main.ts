@@ -1,4 +1,5 @@
 import './style.css';
+import { filterUpcomingEvents, parseEventsMarkdown, type ParsedEvent } from './events.ts';
 
 // Set dynamic footer year
 const yearEl = document.getElementById('footer-year');
@@ -78,32 +79,7 @@ if (card && !prefersReducedMotion && supportsHover) {
   });
 }
 
-interface ParsedEvent {
-  title: string;
-  location: string;
-  month: string;
-  day: string;
-  dateObj: Date;
-  link?: string;
-  map?: string;
-}
-
-function sanitizeHttpUrl(raw: string): string | undefined {
-  const trimmed = raw.replace(/\*\*/g, '').trim();
-  const mdMatch = trimmed.match(/^\[[^\]]*\]\((https?:\/\/[^\s)]+)\)$/i);
-  const candidate = mdMatch ? mdMatch[1] : trimmed;
-
-  try {
-    const parsed = new URL(candidate);
-    if (parsed.protocol === 'https:' || parsed.protocol === 'http:') {
-      return parsed.toString();
-    }
-  } catch {
-    return undefined;
-  }
-
-  return undefined;
-}
+// Event helpers imported from ./events.ts
 
 function createSvgIcon(
   elements: Array<{ tag: 'path' | 'circle' | 'polyline' | 'line' | 'polygon'; attrs: Record<string, string> }>
@@ -246,80 +222,8 @@ async function loadEvents(): Promise<void> {
     if (!response.ok) throw new Error('Failed to load events');
     const text = await response.text();
 
-    const sections = text.split('##').filter((s) => s.trim().length > 0);
-    const allEvents: ParsedEvent[] = [];
-
-    sections.forEach((section) => {
-      const lines = section.trim().split(/\r?\n/);
-      const title = lines[0].trim();
-      let dateString = '';
-      let location = 'TBA';
-      let link: string | undefined;
-      let map: string | undefined;
-      let month = '???';
-      let day = '??';
-      let dateObj = new Date(0);
-
-      lines.slice(1).forEach((line) => {
-        const lowerLine = line.toLowerCase();
-
-        if (lowerLine.indexOf('date') !== -1) {
-          const rawDate = line.split(/date/i)[1]?.replace(/^[\s:*]+/, '').trim() || '';
-          dateString = rawDate.replace(/\*\*/g, '').trim();
-
-          let parseableDate = dateString;
-          if (!/\d{4}/.test(dateString)) {
-            parseableDate += `, ${new Date().getFullYear()}`;
-          }
-
-          const parsedTime = Date.parse(parseableDate);
-          if (!isNaN(parsedTime)) {
-            dateObj = new Date(parsedTime);
-
-            const todayCheck = new Date();
-            todayCheck.setHours(0, 0, 0, 0);
-            if (dateObj < todayCheck && !/\d{4}/.test(dateString)) {
-              dateObj.setFullYear(dateObj.getFullYear() + 1);
-            }
-          }
-
-          const parts = dateString.split(' ');
-          if (parts.length >= 2) {
-            month = parts[0].substring(0, 3).toUpperCase();
-            day = parts[1].replace(/,/g, '');
-          } else {
-            month = dateString.substring(0, 3).toUpperCase();
-          }
-        }
-
-        if (lowerLine.indexOf('location') !== -1) {
-          const rawLoc = line.split(/location/i)[1]?.replace(/^[\s:*]+/, '').trim() || '';
-          location = rawLoc.replace(/\*\*/g, '').trim();
-        }
-
-        const linkMatch = line.match(/^[-*]\s*\*{0,2}link\*{0,2}\s*:\s*(.+)$/i);
-        if (linkMatch) {
-          link = sanitizeHttpUrl(linkMatch[1]);
-        }
-
-        const mapMatch = line.match(/^[-*]\s*\*{0,2}map\*{0,2}\s*:\s*(.+)$/i);
-        if (mapMatch) {
-          map = sanitizeHttpUrl(mapMatch[1]);
-        }
-      });
-
-      allEvents.push({ title, location, month, day, dateObj, link, map });
-    });
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const upcomingEvents = allEvents
-      .filter((event) => event.dateObj >= today)
-      .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime());
-
-    const MAX_EVENTS = 4;
-    const eventsToDisplay = upcomingEvents.slice(0, MAX_EVENTS);
+    const allEvents = parseEventsMarkdown(text);
+    const eventsToDisplay = filterUpcomingEvents(allEvents);
 
     if (eventsToDisplay.length === 0) {
       renderEmptyEvents(eventsGrid);

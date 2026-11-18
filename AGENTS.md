@@ -11,4 +11,4 @@ This repository contains the static Vite + TypeScript website for **`https://pit
 - **Multi-Entry Static Build (`vite.config.ts`)**: Rollup builds both `index.html` and `404.html` into `dist/` to match Azure Storage `$web` `index_document` / `error_404_document`.
 - **Dynamic Events (`public/events.md` & `src/main.ts`)**: Upcoming events are parsed client-side from `public/events.md`, past events are filtered out, and up to 4 upcoming events are rendered using safe DOM construction.
 - **UI & Style Guide**: Follow `STYLE_GUIDE.md` (dark-first slate `#020617` + Pittsburgh Gold `#ffb81c`, CSS custom properties in `src/style.css`).
-- **Verification**: Run `npm run build` (`tsc && vite build`) when Node/npm is available before committing.
+- **Verification & CI-Only Tests**: `npm run check` (`tsc --noEmit`) and `npm run test` (`scripts/run-tests.mjs`) run as pre-deploy gates in GitHub Actions. Automated tests enforce `GITHUB_ACTIONS === 'true'` and are designed for CI-only execution (do not run unit tests locally).
