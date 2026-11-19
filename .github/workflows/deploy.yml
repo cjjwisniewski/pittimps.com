@@ -65,9 +65,52 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
+            # Sync dist/ to $web and prune stale hashed assets from prior deployments
+            az storage blob sync \
+              --container '$web' \
+              --account-name pittimpscom \
+              --source ./dist \
+              --auth-mode login \
+              --delete-destination true
+
+            # Immutable content-hashed Vite bundles (JS, CSS, WOFF2): 1 year cache
+            az storage blob upload-batch \
+              --destination '$web' \
+              --destination-path 'assets' \
+              --account-name pittimpscom \
+              --source ./dist/assets \
+              --auth-mode login \
+              --overwrite \
+              --content-cache-control "public, max-age=31536000, immutable"
+
+            # HTML pages: revalidate at browser, short edge TTL
             az storage blob upload-batch \
               --destination '$web' \
               --account-name pittimpscom \
               --source ./dist \
+              --pattern "*.html" \
               --auth-mode login \
-              --overwrite
+              --overwrite \
+              --content-cache-control "public, max-age=0, s-maxage=300, must-revalidate"
+
+            # Dynamic events markdown: short TTL so schedule updates propagate quickly
+            az storage blob upload-batch \
+              --destination '$web' \
+              --account-name pittimpscom \
+              --source ./dist \
+              --pattern "events.md" \
+              --auth-mode login \
+              --overwrite \
+              --content-cache-control "public, max-age=60, s-maxage=300, must-revalidate"
+
+            # Static media, icons, sitemap, robots, security.txt
+            for ext in webp jpg png svg ico xml txt; do
+              az storage blob upload-batch \
+                --destination '$web' \
+                --account-name pittimpscom \
+                --source ./dist \
+                --pattern "*.$ext" \
+                --auth-mode login \
+                --overwrite \
+                --content-cache-control "public, max-age=86400"
+            done
