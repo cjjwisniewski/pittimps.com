@@ -213,6 +213,42 @@ function renderEmptyEvents(eventsGrid: HTMLElement): void {
   eventsGrid.replaceChildren(emptyEl);
 }
 
+function injectEventStructuredData(events: ParsedEvent[]): void {
+  const existing = document.getElementById('events-jsonld');
+  if (existing) existing.remove();
+  if (events.length === 0) return;
+
+  const graph = events.map((event) => ({
+    '@type': 'Event',
+    name: event.title,
+    startDate: event.dateObj.toISOString().split('T')[0],
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    eventStatus: 'https://schema.org/EventScheduled',
+    location: {
+      '@type': 'Place',
+      name: event.location,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Pittsburgh',
+        addressRegion: 'PA',
+        addressCountry: 'US'
+      }
+    },
+    organizer: {
+      '@type': 'Organization',
+      name: 'Pitt Imps',
+      url: 'https://pittimps.com/'
+    },
+    ...(event.link ? { url: event.link } : { url: 'https://pittimps.com/#events' })
+  }));
+
+  const script = document.createElement('script');
+  script.id = 'events-jsonld';
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
+  document.head.appendChild(script);
+}
+
 // Event Markdown Parser
 async function loadEvents(): Promise<void> {
   const eventsGrid = document.getElementById('events-grid');
@@ -234,6 +270,7 @@ async function loadEvents(): Promise<void> {
     eventsGrid.replaceChildren(
       ...eventsToDisplay.map((event, index) => renderEventCard(event, index === 0))
     );
+    injectEventStructuredData(eventsToDisplay);
   } catch (error) {
     console.error('Error loading events:', error);
     renderEmptyEvents(eventsGrid);
