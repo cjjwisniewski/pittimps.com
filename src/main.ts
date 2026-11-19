@@ -1,3 +1,4 @@
+import '@fontsource-variable/inter';
 import './style.css';
 import { filterUpcomingEvents, parseEventsMarkdown, type ParsedEvent } from './events.ts';
 
