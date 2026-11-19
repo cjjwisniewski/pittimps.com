@@ -673,8 +673,10 @@ button:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  font-family: inherit;
   font-size: 0.78rem;
   font-weight: 600;
+  cursor: pointer;
   color: var(--text-secondary);
   background: var(--bg-surface);
   border: 1px solid var(--border-color);

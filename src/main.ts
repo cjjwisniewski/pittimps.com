@@ -140,6 +140,80 @@ function createEventActionLink(
   return linkEl;
 }
 
+function createCalendarIcon(): SVGSVGElement {
+  return createSvgIcon([
+    { tag: 'path', attrs: { d: 'M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z' } },
+    { tag: 'line', attrs: { x1: '16', y1: '2', x2: '16', y2: '6' } },
+    { tag: 'line', attrs: { x1: '8', y1: '2', x2: '8', y2: '6' } },
+    { tag: 'line', attrs: { x1: '3', y1: '10', x2: '21', y2: '10' } },
+  ]);
+}
+
+function escapeIcsText(value: string): string {
+  return value
+    .replace(/\\/g, '\\\\')
+    .replace(/;/g, '\\;')
+    .replace(/,/g, '\\,')
+    .replace(/\r?\n/g, '\\n');
+}
+
+function formatIcsDate(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}${m}${d}`;
+}
+
+function downloadEventIcs(event: ParsedEvent): void {
+  const start = new Date(event.dateObj.getFullYear(), event.dateObj.getMonth(), event.dateObj.getDate());
+  const end = new Date(start);
+  end.setDate(end.getDate() + 1);
+
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+  const slug =
+    event.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '') || 'pitt-imps-event';
+
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Pitt Imps//Pittsburgh Premodern MTG//EN',
+    'CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT',
+    `UID:${formatIcsDate(start)}-${slug}@pittimps.com`,
+    `DTSTAMP:${stamp}`,
+    `DTSTART;VALUE=DATE:${formatIcsDate(start)}`,
+    `DTEND;VALUE=DATE:${formatIcsDate(end)}`,
+    `SUMMARY:${escapeIcsText(event.title)}`,
+    `LOCATION:${escapeIcsText(event.location)}`,
+    `DESCRIPTION:${escapeIcsText(`Pitt Imps Premodern MTG event at ${event.location}. Details: ${event.link || 'https://pittimps.com/#events'}`)}`,
+    `URL:${event.link || 'https://pittimps.com/#events'}`,
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ];
+
+  const blob = new Blob([lines.join('\r\n') + '\r\n'], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${slug}-${formatIcsDate(start)}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function createCalendarActionButton(event: ParsedEvent): HTMLButtonElement {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'event-action-link';
+  btn.append(createCalendarIcon(), document.createTextNode('Add to Calendar'));
+  btn.addEventListener('click', () => downloadEventIcs(event));
+  return btn;
+}
+
 function renderEventCard(event: ParsedEvent, isNext: boolean): HTMLElement {
   const cardEl = document.createElement('article');
   cardEl.className = isNext
@@ -182,22 +256,21 @@ function renderEventCard(event: ParsedEvent, isNext: boolean): HTMLElement {
 
   infoEl.append(titleRowEl, locEl);
 
-  if (event.link || event.map) {
-    const actionsEl = document.createElement('div');
-    actionsEl.className = 'event-actions';
+  const actionsEl = document.createElement('div');
+  actionsEl.className = 'event-actions';
 
-    if (event.link) {
-      actionsEl.appendChild(
-        createEventActionLink(event.link, 'Event Info', createExternalLinkIcon())
-      );
-    }
-
-    if (event.map) {
-      actionsEl.appendChild(createEventActionLink(event.map, 'Map', createMapIcon()));
-    }
-
-    infoEl.appendChild(actionsEl);
+  if (event.link) {
+    actionsEl.appendChild(
+      createEventActionLink(event.link, 'Event Info', createExternalLinkIcon())
+    );
   }
+
+  if (event.map) {
+    actionsEl.appendChild(createEventActionLink(event.map, 'Map', createMapIcon()));
+  }
+
+  actionsEl.appendChild(createCalendarActionButton(event));
+  infoEl.appendChild(actionsEl);
 
   cardEl.append(dateEl, infoEl);
   return cardEl;
