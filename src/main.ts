@@ -1,6 +1,11 @@
 import '@fontsource-variable/inter';
 import './style.css';
-import { filterUpcomingEvents, parseEventsMarkdown, type ParsedEvent } from './events.ts';
+import {
+  extractLocationAddress,
+  filterUpcomingEvents,
+  parseEventsMarkdown,
+  type ParsedEvent
+} from './events.ts';
 
 // Set dynamic footer year
 const yearEl = document.getElementById('footer-year');
@@ -166,7 +171,10 @@ function formatIcsDate(date: Date): string {
 
 function downloadEventIcs(event: ParsedEvent): void {
   const start = new Date(event.dateObj.getFullYear(), event.dateObj.getMonth(), event.dateObj.getDate());
-  const end = new Date(start);
+  const endBase = event.endDateObj
+    ? new Date(event.endDateObj.getFullYear(), event.endDateObj.getMonth(), event.endDateObj.getDate())
+    : start;
+  const end = new Date(endBase);
   end.setDate(end.getDate() + 1);
 
   const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
@@ -291,29 +299,37 @@ function injectEventStructuredData(events: ParsedEvent[]): void {
   if (existing) existing.remove();
   if (events.length === 0) return;
 
-  const graph = events.map((event) => ({
-    '@type': 'Event',
-    name: event.title,
-    startDate: event.dateObj.toISOString().split('T')[0],
-    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-    eventStatus: 'https://schema.org/EventScheduled',
-    location: {
-      '@type': 'Place',
-      name: event.location,
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: 'Pittsburgh',
-        addressRegion: 'PA',
-        addressCountry: 'US'
-      }
-    },
-    organizer: {
-      '@type': 'Organization',
-      name: 'Pitt Imps',
-      url: 'https://pittimps.com/'
-    },
-    ...(event.link ? { url: event.link } : { url: 'https://pittimps.com/#events' })
-  }));
+  const graph = events.map((event) => {
+    const address = extractLocationAddress(event.location, event.map);
+    return {
+      '@type': 'Event',
+      name: event.title,
+      startDate: formatIcsDate(event.dateObj).replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3'),
+      ...(event.endDateObj
+        ? { endDate: formatIcsDate(event.endDateObj).replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3') }
+        : {}),
+      eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+      eventStatus: 'https://schema.org/EventScheduled',
+      location: {
+        '@type': 'Place',
+        name: event.location,
+        ...(address
+          ? {
+              address: {
+                '@type': 'PostalAddress',
+                ...address
+              }
+            }
+          : {})
+      },
+      organizer: {
+        '@type': 'Organization',
+        name: 'Pitt Imps',
+        url: 'https://pittimps.com/'
+      },
+      ...(event.link ? { url: event.link } : { url: 'https://pittimps.com/#events' })
+    };
+  });
 
   const script = document.createElement('script');
   script.id = 'events-jsonld';

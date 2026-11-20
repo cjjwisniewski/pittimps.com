@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import {
+  extractLocationAddress,
   filterUpcomingEvents,
   parseEventsMarkdown,
   sanitizeHttpUrl
@@ -20,39 +21,86 @@ test('sanitizeHttpUrl allows http/https and strips markdown or rejects unsafe sc
   assert.equal(sanitizeHttpUrl('not a url'), undefined);
 });
 
-test('parseEventsMarkdown parses metadata, rolls over past month/day without year, and honors explicit year', () => {
+test('parseEventsMarkdown parses single dates, multi-day ranges, and expires past yearless dates', () => {
   const sample = `
 ## Past Explicit
 - **Date**: JAN 10, 2025
 - **Location**: Old Hall
 
-## Future Rollover
+## Past Yearless
 - **Date**: FEB 15
 - **Location**: The Vault
 - **Link**: https://vaultgamestore.com/
-- **Map**: https://maps.google.com/?q=The+Vault
+- **Map**: https://maps.google.com/?q=The+Vault+5274+State+Route+30+Suite+18+Greensburg+PA+15601
 
-## Explicit Future
-- **Date**: DEC 19, 2026
+## Cross-Month Range
+- **Date**: OCT 29-NOV 1, 2026
 - **Location**: Convention Center
+
+## Same-Month Range
+- **Date**: MAR 19-21, 2027
+- **Location**: SoWa Power Station, Boston, MA
 `;
 
   const ref = new Date('2026-11-18T12:00:00Z');
   const parsed = parseEventsMarkdown(sample, ref);
-  assert.equal(parsed.length, 3);
+  assert.equal(parsed.length, 4);
 
   assert.equal(parsed[0].title, 'Past Explicit');
   assert.equal(parsed[0].dateObj.getFullYear(), 2025);
 
-  assert.equal(parsed[1].title, 'Future Rollover');
+  assert.equal(parsed[1].title, 'Past Yearless');
   assert.equal(parsed[1].month, 'FEB');
   assert.equal(parsed[1].day, '15');
-  assert.equal(parsed[1].dateObj.getFullYear(), 2027);
+  assert.equal(parsed[1].dateObj.getFullYear(), 2026);
   assert.equal(parsed[1].link, 'https://vaultgamestore.com/');
-  assert.equal(parsed[1].map, 'https://maps.google.com/?q=The+Vault');
 
-  assert.equal(parsed[2].title, 'Explicit Future');
+  assert.equal(parsed[2].title, 'Cross-Month Range');
+  assert.equal(parsed[2].month, 'OCT');
+  assert.equal(parsed[2].day, '29');
   assert.equal(parsed[2].dateObj.getFullYear(), 2026);
+  assert.equal(parsed[2].endDateObj?.getMonth(), 10); // November
+  assert.equal(parsed[2].endDateObj?.getDate(), 1);
+
+  assert.equal(parsed[3].title, 'Same-Month Range');
+  assert.equal(parsed[3].month, 'MAR');
+  assert.equal(parsed[3].day, '19-21');
+  assert.equal(parsed[3].dateObj.getFullYear(), 2027);
+  assert.equal(parsed[3].endDateObj?.getDate(), 21);
+
+  // Only Same-Month Range is upcoming on 2026-11-18; Past Yearless must NOT roll over to 2027
+  const upcoming = filterUpcomingEvents(parsed, ref);
+  assert.deepEqual(
+    upcoming.map((e) => e.title),
+    ['Same-Month Range']
+  );
+
+  // Cross-Month Range stays active mid-event (e.g. Oct 31)
+  const midEvent = filterUpcomingEvents(parsed, new Date('2026-10-31T12:00:00Z'));
+  assert.deepEqual(
+    midEvent.map((e) => e.title),
+    ['Cross-Month Range', 'Same-Month Range']
+  );
+});
+
+test('extractLocationAddress infers city/state from location text or Google Maps query', () => {
+  assert.deepEqual(extractLocationAddress('SoWa Power Station, Boston, MA'), {
+    addressLocality: 'Boston',
+    addressRegion: 'MA',
+    addressCountry: 'US'
+  });
+  assert.deepEqual(
+    extractLocationAddress(
+      'The Vault',
+      'https://maps.google.com/?q=The+Vault+5274+State+Route+30+Suite+18+Greensburg+PA+15601'
+    ),
+    {
+      addressLocality: 'Greensburg',
+      addressRegion: 'PA',
+      addressCountry: 'US'
+    }
+  );
+  assert.equal(extractLocationAddress('Online Event'), undefined);
 });
 
 test('filterUpcomingEvents drops past events, sorts ascending, and limits to maxEvents', () => {
