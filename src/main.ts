@@ -55,8 +55,27 @@ discordModal?.addEventListener('click', (e) => {
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && discordModal && !discordModal.hidden) {
+  if (!discordModal || discordModal.hidden) return;
+  if (e.key === 'Escape') {
     closeDiscordModal();
+    return;
+  }
+  if (e.key === 'Tab') {
+    const focusables = Array.from(
+      discordModal.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+    );
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
   }
 });
 
@@ -236,7 +255,7 @@ function renderEventCard(event: ParsedEvent, isNext: boolean): HTMLElement {
   monthEl.textContent = event.month;
 
   const dayEl = document.createElement('span');
-  dayEl.className = 'day';
+  dayEl.className = event.day.includes('-') ? 'day is-range' : 'day';
   dayEl.textContent = event.day;
 
   dateEl.append(monthEl, dayEl);
@@ -258,11 +277,27 @@ function renderEventCard(event: ParsedEvent, isNext: boolean): HTMLElement {
     titleRowEl.appendChild(badgeEl);
   }
 
+  infoEl.appendChild(titleRowEl);
+
+  if (event.endDateObj) {
+    const rangeEl = document.createElement('span');
+    rangeEl.className = 'event-range';
+    const startFmt = event.dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const sameMonth =
+      event.dateObj.getFullYear() === event.endDateObj.getFullYear() &&
+      event.dateObj.getMonth() === event.endDateObj.getMonth();
+    const endFmt = sameMonth
+      ? String(event.endDateObj.getDate())
+      : event.endDateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    rangeEl.textContent = `${startFmt}–${endFmt}, ${event.endDateObj.getFullYear()}`;
+    infoEl.appendChild(rangeEl);
+  }
+
   const locEl = document.createElement('span');
   locEl.className = 'event-location';
   locEl.append(createPinIcon(), document.createTextNode(event.location));
 
-  infoEl.append(titleRowEl, locEl);
+  infoEl.appendChild(locEl);
 
   const actionsEl = document.createElement('div');
   actionsEl.className = 'event-actions';
@@ -353,16 +388,19 @@ async function loadEvents(): Promise<void> {
 
     if (eventsToDisplay.length === 0) {
       renderEmptyEvents(eventsGrid);
+      eventsGrid.setAttribute('aria-busy', 'false');
       return;
     }
 
     eventsGrid.replaceChildren(
       ...eventsToDisplay.map((event, index) => renderEventCard(event, index === 0))
     );
+    eventsGrid.setAttribute('aria-busy', 'false');
     injectEventStructuredData(eventsToDisplay);
   } catch (error) {
     console.error('Error loading events:', error);
     renderEmptyEvents(eventsGrid);
+    eventsGrid.setAttribute('aria-busy', 'false');
   }
 }
 

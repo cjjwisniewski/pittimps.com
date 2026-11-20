@@ -152,8 +152,21 @@
                     <a href="https://discord.gg/UmKWGpaXjZ" class="section-cta" data-discord-invite target="_blank"
                         rel="noopener noreferrer">Coordinate on Discord &rarr;</a>
                 </div>
-                <div class="events-grid" id="events-grid">
-                    <!-- Dynamic events loaded from /events.md -->
+                <div class="events-grid" id="events-grid" aria-live="polite" aria-busy="true">
+                    <article class="glass-panel event-card event-skeleton" aria-hidden="true">
+                        <div class="event-date skeleton-box"></div>
+                        <div class="event-info">
+                            <div class="skeleton-line skeleton-title"></div>
+                            <div class="skeleton-line skeleton-meta"></div>
+                        </div>
+                    </article>
+                    <article class="glass-panel event-card event-skeleton" aria-hidden="true">
+                        <div class="event-date skeleton-box"></div>
+                        <div class="event-info">
+                            <div class="skeleton-line skeleton-title"></div>
+                            <div class="skeleton-line skeleton-meta"></div>
+                        </div>
+                    </article>
                 </div>
             </div>
         </section>

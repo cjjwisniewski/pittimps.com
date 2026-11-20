@@ -611,6 +611,43 @@ button:focus-visible {
   font-weight: 700;
   line-height: 1.1;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.event-date .day.is-range {
+  font-size: 1.2rem;
+}
+
+.event-range {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-color);
+  letter-spacing: 0.02em;
+}
+
+.event-skeleton {
+  pointer-events: none;
+}
+
+.skeleton-box {
+  min-height: 64px;
+  background: rgba(148, 163, 184, 0.12);
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: 6px;
+  background: rgba(148, 163, 184, 0.14);
+}
+
+.skeleton-title {
+  width: 62%;
+  height: 18px;
+}
+
+.skeleton-meta {
+  width: 45%;
+  margin-top: 0.25rem;
 }
 
 .event-info {
