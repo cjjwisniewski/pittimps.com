@@ -1,12 +1,12 @@
 # Pitt Imps Style Guide for Agents
 
-This document defines the visual, structural, and code conventions for **pittimps.com** so future updates to pages, components, and copy stay consistent with the site's dark-first slate and Pittsburgh Gold aesthetic (aligned with `undo.is` and `seeker.cityoftraitors.com`).
+This document defines the visual, structural, and code conventions for **pittimps.com** so future updates to pages, components, and copy stay consistent with the site's warm steel-city charcoal and Pittsburgh Gold aesthetic.
 
 ---
 
 ## 1. Visual Identity & Aesthetic
 
-* **Theme:** Dark-first, high-contrast slate aesthetic (`#020617` canvas with top gold / subtle crimson radial glows and a `160px x 80px` Pittsburgh tied-arch bridge lattice in `body::before`) paired with translucent glassmorphism surfaces and a single vibrant Pittsburgh Gold accent (`#ffb81c`).
+* **Theme:** Warm charcoal & iron-black canvas (`#0e0d0c`) with the `160px x 80px` Pittsburgh tied-arch bridge lattice in `body::before`, paired with flat solid matte surfaces (`#171513`), crisp `1px` iron borders (`#2b2723`), a `3px` Pittsburgh Gold (`#ffb81c`) top stripe on the navbar, and bold uppercase display headings. No frosted glassmorphism or ambient glow blobs.
 * **Stacking Context:** `body::before` sits at `z-index: 0`, while `main` and `.site-footer` sit at `z-index: 1` (leaving `.navbar` at `z-index: 100` and `#discord-modal` at `z-index: 200`).
 * **Tone:** Clean, restrained, modern. Avoid heavy multi-color gradients, neon clutter, or gratuitous animations.
 * **Tokens First:** Always reference the CSS custom properties defined in [`src/style.css`](src/style.css) rather than hardcoding hex or `rgba(...)` colors.
